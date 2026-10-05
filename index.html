@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallyeam - Yeni Nesil Duvar Kağıtları</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #131b2e;
+            --accent-color: #8b5cf6;
+            --accent-hover: #7c3aed;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(11, 15, 25, 0.9);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .logo span { color: var(--accent-color); }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .admin-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        .admin-btn:hover { background: var(--accent-hover); }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            width: 100%;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        /* Grid Yapısı */
+        .wallpapers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .wallpaper-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s;
+        }
+
+        .wallpaper-card:hover { transform: translateY(-5px); }
+
+        .wallpaper-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .wallpaper-info {
+            padding: 15px;
+        }
+
+        .wallpaper-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .wallpaper-category {
+            font-size: 12px;
+            color: var(--accent-color);
+            background: rgba(139, 92, 246, 0.1);
+            padding: 3px 8px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        /* Admin Paneli Modalı */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .modal-content h2 { margin-bottom: 20px; font-size: 20px; }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .modal-btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 30px 40px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">✨ Wallyeam</div>
+        <div class="nav-right">
+            <button class="admin-btn" onclick="openAdminLogin()">🔒 Yönetici Paneli</button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <h2 class="section-title">Yayınlanan Duvar Kağıtları</h2>
+        <div class="wallpapers-grid" id="wallpaperGrid">
+            </div>
+    </div>
+
+    <div class="modal" id="adminModal">
+        <div class="modal-content" id="modalBody">
+            </div>
+    </div>
+
+    <footer>
+        © 2026 Wallyeam. Tüm hakları saklıdır.
+    </footer>
+
+    <script>
+        // Örnek başlangıç verileri (Tarayıcı hafızasında saklanır)
+        let wallpapers = JSON.parse(localStorage.getItem('wallyeam_posts')) || [
+            { title: "Levi Ackerman", category: "Anime", image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=500&auto=format&fit=crop" },
+            { title: "Cyberpunk Şehir", category: "Oyun", image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=500&auto=format&fit=crop" }
+        ];
+
+        function renderWallpapers() {
+            const grid = document.getElementById('wallpaperGrid');
+            grid.innerHTML = '';
+            wallpapers.forEach(item => {
+                grid.innerHTML += `
+                    <div class="wallpaper-card">
+                        <img src="${item.image}" alt="${item.title}">
+                        <div class="wallpaper-info">
+                            <div class="wallpaper-title">${item.title}</div>
+                            <span class="wallpaper-category">${item.category}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function openAdminLogin() {
+            document.getElementById('adminModal').style.display = 'flex';
+            document.getElementById('modalBody').innerHTML = `
+                <h2>Yönetici Girişi</h2>
+                <div class="form-group">
+                    <label>Yönetici Şifresi</label>
+                    <input type="password" id="adminPass" placeholder="Şifrenizi girin">
+                </div>
+                <div class="modal-btns">
+                    <button class="btn-primary" onclick="checkPassword()">Giriş Yap</button>
+                    <button class="btn-secondary" onclick="closeModal()">İptal</button>
+                </div>
+            `;
+        }
+
+        function checkPassword() {
+            const pass = document.getElementById('adminPass').value;
+            // Şifrenizi buradan değiştirebilirsiniz (Örn: 123456)
+            if(pass === '123456') {
+                openUploadPanel();
+            } else {
+                alert('Hatalı şifre!');
+            }
+        }
+
+        function openUploadPanel() {
+            document.getElementById('modalBody').innerHTML = `
+                <h2>Yeni Duvar Kağıdı Ekle</h2>
+                <div class="form-group">
+                    <label>Görsel Başlığı</label>
+                    <input type="text" id="postTitle" placeholder="Örn: Doğa Manzarası">
+                </div>
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <select id="postCategory">
+                        <option value="Anime">Anime</option>
+                        <option value="Oyun">Oyun</option>
+                        <option value="Doğa">Doğa</option>
+                        <option value="Karanlık">Karanlık</option>
+                        <option value="Arabalar">Arabalar</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Görsel Linki (URL)</label>
+                    <input type="text" id="postImage" placeholder="Fotoğraf bağlantısını yapıştırın">
+                </div>
+                <div class="modal-btns">
+                    <button class="btn-primary" onclick="addNewPost()">Paylaş</button>
+                    <button class="btn-secondary" onclick="closeModal()">Kapat</button>
+                </div>
+            `;
+        }
+
+        function addNewPost() {
+            const title = document.getElementById('postTitle').value;
+            const category = document.getElementById('postCategory').value;
+            const image = document.getElementById('postImage').value;
+
+            if(!title || !image) {
+                alert('Lütfen tüm alanları doldurun!');
+                return;
+            }
+
+            wallpapers.unshift({ title, category, image });
+            localStorage.setItem('wallyeam_posts', JSON.stringify(wallpapers));
+            renderWallpapers();
+            closeModal();
+            alert('Paylaşım başarıyla eklendi!');
+        }
+
+        function closeModal() {
+            document.getElementById('adminModal').style.display = 'none';
+        }
+
+        // Sayfa açıldığında yükle
+        renderWallpapers();
+    </script>
+</body>
+</html>
